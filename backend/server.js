@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const transactionController = require('./controllers/transactionController');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -17,6 +18,15 @@ app.use(bodyParser.json());
 mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error(err));
+
+// Transaction Routes
+app.get('/api/transactions/result', transactionController.getResult);
+app.get('/api/transactions/summaries', transactionController.getCategorySummaries);
+app.post('/api/transactions', transactionController.createTransaction);
+app.get('/api/transactions', transactionController.getTransactions);
+app.get('/api/transactions/:id', transactionController.getTransactionById);
+app.put('/api/transactions/:id', transactionController.updateTransaction);
+app.delete('/api/transactions/:id', transactionController.deleteTransaction);
 
 // Simple route for testing
 app.get('/', (req, res) => {
