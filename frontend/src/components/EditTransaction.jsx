@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import './TransactionPage.css';
 
 const EditTransaction = () => {
     const [transaction, setTransaction] = useState({
@@ -46,6 +47,15 @@ const EditTransaction = () => {
         }));
     };
 
+    const handleDeleteCategory = (index) => {
+        if (transaction.categories.length > 1) {
+            const newCategories = transaction.categories.filter((_, i) => i !== index);
+            setTransaction((prev) => ({ ...prev, categories: newCategories }));
+        } else {
+            alert("You must have at least one category.");
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -75,7 +85,8 @@ const EditTransaction = () => {
         <div>
             <h2>Edit Transaction</h2>
             <form onSubmit={handleSubmit}>
-                <div>
+                <div className='transaction-info'>
+                <label className='info-row'>
                     <label>Amount:</label>
                     <input
                         type="number"
@@ -84,8 +95,8 @@ const EditTransaction = () => {
                         onChange={handleChange}
                         required
                     />
-                </div>
-                <div>
+                </label>
+                <label className='info-row'>
                     <label>Description:</label>
                     <input
                         type="text"
@@ -93,8 +104,8 @@ const EditTransaction = () => {
                         value={transaction.description}
                         onChange={handleChange}
                     />
-                </div>
-                <div>
+                </label>
+                <label className='info-row'>
                     <label>Date:</label>
                     <input
                         type="date"
@@ -103,18 +114,23 @@ const EditTransaction = () => {
                         onChange={handleChange}
                         required
                     />
-                </div>
-                <div>
+                </label>
+                <label className='info-row'>
                     <label>Type:</label>
                     <select name="type" value={transaction.type} onChange={handleChange}>
                         <option value="income">Income</option>
                         <option value="expense">Expense</option>
                     </select>
+                </label>
                 </div>
                 <h4>Categories</h4>
+                <div className="categories-container">
+                <div className="category-row header">
+                        <span>Category</span>
+                        <span>Amount</span>
+                    </div>
                 {transaction.categories.map((category, index) => (
-                    <div key={index}>
-                        <label>Category Name:</label>
+                    <div className="category-row" key={index}>
                         <input
                             type="text"
                             name="name"
@@ -122,7 +138,6 @@ const EditTransaction = () => {
                             onChange={(e) => handleCategoryChange(index, e)}
                             required
                         />
-                        <label>Amount:</label>
                         <input
                             type="number"
                             name="amount"
@@ -130,8 +145,14 @@ const EditTransaction = () => {
                             onChange={(e) => handleCategoryChange(index, e)}
                             required
                         />
+                        {transaction.categories.length > 1 && (
+                            <button type="button" onClick={() => handleDeleteCategory(index)}>
+                                Delete
+                            </button>
+                        )}
                     </div>
                 ))}
+                </div>
                 <button type="button" onClick={addCategory}>Add Category</button>
                 <button type="submit">Update Transaction</button>
             </form>

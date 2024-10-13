@@ -1,0 +1,52 @@
+.transaction-info{
+    display: flex;
+    flex-direction: column;
+}
+
+.info-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 5px;
+}
+
+.info-row input,
+.info-row select{
+    width: 15vw;
+    box-sizing: border-box;
+    padding: 0rem;
+    margin-left: auto;
+}
+
+.categories-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem; 
+}
+
+.categories-header {
+    display: flex;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.category-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.category-row input  {
+    margin-right: 0.5rem;
+    flex: 1;
+}
+
+.category-row span  {
+    margin-right: 0.5rem;
+    flex: 1;
+}
+
+
+.category-row button {
+    margin-left: 0.5rem;
+}
