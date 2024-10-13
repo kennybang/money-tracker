@@ -1,0 +1,32 @@
+/* src/components/Navbar.css */
+/*
+.vertical-navbar {
+    width: 10%; 
+    height: 100vh; 
+    background-color: #dadada; 
+    position: fixed; 
+    width: 10%;
+    top: 0; 
+    left: 0; 
+    padding-top: 20px; 
+  }
+    */
+  
+  .vertical-navbar ul {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0; /* Remove padding */
+  }
+  
+  .vertical-navbar li {
+    padding: 15px; /* Add some padding to list items */
+  }
+  
+  .vertical-navbar a {
+    text-decoration: none; /* Remove underline */
+    display: block; /* Make the link fill the entire area */
+  }
+  
+  .vertical-navbar a:hover {
+    background-color: #575757; /* Change background on hover */
+  }
+  

@@ -1,0 +1,16 @@
+.main-layout {
+    display: flex; 
+    height: 100vh; 
+  }
+  
+  .vertical-navbar {
+    flex: 0 0 15%; 
+    max-width: 200px; 
+    background-color: #f8f9fa;
+  }
+  
+  .main-content {
+    flex: 1; 
+    padding: 20px;
+    overflow-y: auto; 
+  }
