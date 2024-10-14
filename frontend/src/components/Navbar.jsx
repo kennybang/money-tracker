@@ -9,7 +9,10 @@ const Navbar = () => {
     <nav className="vertical-navbar">
       <ul>
         <li>
-          <NavLink to="/" activeClassName="active-link">Transaction List</NavLink>
+          <NavLink to="/" activeClassName="active-link">Summary</NavLink>
+        </li>
+        <li>
+          <NavLink to="/transaction-list" activeClassName="active-link">Transaction List</NavLink>
         </li>
       </ul>
     </nav>
