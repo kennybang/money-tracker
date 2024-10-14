@@ -70,18 +70,33 @@ exports.deleteTransaction = async (req, res) => {
 };
 
 exports.getCategorySummaries = async (req, res) => {
+    const { startDate, endDate } = req.query;
+
+    // Validate dates
+    if (!startDate || !endDate) {
+        return res.status(400).json({ message: 'Please provide both startDate and endDate' });
+    }
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
     try {
         const summaries = await Transaction.aggregate([
             {
-                $unwind: "$categories"  // UNWIND categories array
+                $match: {
+                    date: { $gte: start, $lte: end }  // Filter transactions by date range
+                }
+            },
+            {
+                $unwind: "$categories"  // Unwind categories array
             },
             {
                 $group: {
                     _id: {
                         category: "$categories.name",
-                        type: "$type"  // 'type' field for income or expense
+                        type: "$type"  // Group by category and transaction type (income/expense)
                     },
-                    total: { $sum: "$amount" }  // Sum the amounts per category
+                    total: { $sum: "$categories.amount" }  // Sum the category amounts
                 }
             },
             {
@@ -108,11 +123,13 @@ exports.getCategorySummaries = async (req, res) => {
                 }
             }
         ]);
+
         res.json(summaries);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 // Get sum of incomes and expenses within a date range
 exports.getResult = async (req, res) => {
