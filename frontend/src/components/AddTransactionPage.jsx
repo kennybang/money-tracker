@@ -42,7 +42,7 @@ const AddTransactionPage = () => {
             setDescription('');
             setDate('');
             setCategories([{ name: '', amount: '' }]);
-            navigate('/');
+            navigate('/transaction-list');
         } catch (error) {
             console.error('Error adding transaction:', error);
         }
@@ -108,7 +108,7 @@ const AddTransactionPage = () => {
                 </button>
                 <button type="submit">Submit</button>
             </form>
-            <button onClick={() => navigate('/')}>Back to Transaction List</button>
+            <button onClick={() => navigate('/transaction-list')}>Back to Transaction List</button>
         </div>
     );
 };

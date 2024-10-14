@@ -46,7 +46,7 @@ const TransactionList = () => {
                         <th>Date</th>
                         <th>Type</th>
                         <th>Categories</th>
-                        <th></th> {/* New column for actions */}
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -57,13 +57,13 @@ const TransactionList = () => {
                             <td>{new Date(transaction.date).toLocaleDateString()}</td>
                             <td>{transaction.type}</td>
                             <td>
-                                <ul>
+                                <div>
                                     {transaction.categories.map((category, index) => (
-                                        <li key={index}>
+                                        <div key={index}>
                                             {category.name}: {category.amount}
-                                        </li>
+                                        </div>
                                     ))}
-                                </ul>
+                                </div>
                             </td>
                             <td>
                                 <Link to={`/edit-transaction/${transaction._id}`}>

@@ -9,10 +9,10 @@ const Navbar = () => {
     <nav className="vertical-navbar">
       <ul>
         <li>
-          <NavLink to="/" activeClassName="active-link">Summary</NavLink>
+          <NavLink to="/" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-class')}>Summary</NavLink>
         </li>
         <li>
-          <NavLink to="/transaction-list" activeClassName="active-link">Transaction List</NavLink>
+          <NavLink to="/transaction-list" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-class')}>Transaction List</NavLink>
         </li>
       </ul>
     </nav>

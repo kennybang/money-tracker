@@ -60,7 +60,7 @@ const EditTransaction = () => {
         e.preventDefault();
         try {
             await axios.put(`http://localhost:5000/api/transactions/${id}`, transaction);
-            navigate('/');
+            navigate('/transaction-list');
         } catch (err) {
             setError('Failed to update transaction');
         }
@@ -70,7 +70,7 @@ const EditTransaction = () => {
         if (window.confirm('Are you sure you want to delete this transaction?')) {
             try {
                 await axios.delete(`http://localhost:5000/api/transactions/${id}`);
-                navigate('/'); // Redirect to the transaction list after deletion
+                navigate('/transaction-list'); // Redirect to the transaction list after deletion
             } catch (err) {
                 setError('Failed to delete transaction');
             }
@@ -156,7 +156,7 @@ const EditTransaction = () => {
                 <button type="button" onClick={addCategory}>Add Category</button>
                 <button type="submit">Update Transaction</button>
             </form>
-            <button onClick={() => navigate('/')}>Cancel</button> {/* Back/Cancel button */}
+            <button onClick={() => navigate('/transaction-list')}>Cancel</button> {/* Back/Cancel button */}
             <button onClick={handleDelete} style={{ marginLeft: '10px', color: 'red' }}>Delete Transaction</button> {/* Delete button */}
         </div>
     );
