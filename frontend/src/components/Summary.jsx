@@ -1,41 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Summary.css'; 
 
 const Summary = () => {
     const [result, setResult] = useState({ income: 0, expense: 0 });
-    const [loading, setLoading] = useState(false); 
+    const [categorySummaries, setCategorySummaries] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
-    // Set default dates to the current month
-    const getDefaultStartDate = () => {
-        const date = new Date();
-        date.setDate(1); // First day of the month
-        return date.toISOString().split('T')[0]; // Format as yyyy-mm-dd
-    };
-
-    const getDefaultEndDate = () => {
-        const date = new Date();
-        return date.toISOString().split('T')[0]; // Today's date
-    };
-
-    const [startDate, setStartDate] = useState(getDefaultStartDate());
-    const [endDate, setEndDate] = useState(getDefaultEndDate());
-
-    // Fetch summary when startDate or endDate changes
+    // Fetch overall income/expense summary and category summaries
     const fetchResult = async () => {
-        if (!startDate || !endDate) {
-            setError('Please provide both start and end dates');
-            return;
-        }
-
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.get(`http://localhost:5000/api/transactions/result`, {
+            const resultResponse = await axios.get('http://localhost:5000/api/transactions/result', {
                 params: { startDate, endDate },
             });
-            setResult(response.data);
+            setResult(resultResponse.data);
+
+            // Fetch category summaries
+            const categoryResponse = await axios.get('http://localhost:5000/api/transactions/summaries', {
+                params: { startDate, endDate },
+            });
+            setCategorySummaries(categoryResponse.data);
             setLoading(false);
         } catch (err) {
             setError('Failed to fetch result');
@@ -43,57 +32,79 @@ const Summary = () => {
         }
     };
 
+    // Fetch summary on mount or date change
     useEffect(() => {
-        fetchResult();
+        if (startDate && endDate) {
+            fetchResult();
+        }
     }, [startDate, endDate]);
 
+    // Set default date range
+    useEffect(() => {
+        const today = new Date().toISOString().split('T')[0];
+        const monthAgo = new Date(new Date().setDate(new Date().getDate() - 30))
+            .toISOString()
+            .split('T')[0];
+        setStartDate(monthAgo);
+        setEndDate(today);
+    }, []);
+
+    // loading and error states
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>{error}</div>;
+    }
+
     return (
-        <>
-            <div className="summary-container">
-                <h2>Summary</h2>
-                
-                <div className="date-range">
-                    <label>
-                        Start Date:
-                        <input 
-                            type="date" 
-                            value={startDate} 
-                            onChange={(e) => setStartDate(e.target.value)} 
-                            required
-                        />
-                    </label>
-                    <label>
-                        End Date:
-                        <input 
-                            type="date" 
-                            value={endDate} 
-                            onChange={(e) => setEndDate(e.target.value)} 
-                            required
-                        />
-                    </label>
-                </div>
+        <div>
+            <h2>Summary</h2>
+            <div className="date-filters">
+                <label>
+                    Start Date:
+                    <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+                </label>
+                <label>
+                    End Date:
+                    <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+                </label>
+            </div>
 
-                {loading && <div>Loading...</div>}
-                {error && <div>{error}</div>}
+            <div className="summary-section">
+                <h3>Overall</h3>
+                <p>Income: {result.income}</p>
+                <p>Expense: {result.expense}</p>
+                <p>Result: {result.income - result.expense}</p>
+            </div>
 
-                {!loading && !error && (
-                    <>
-                        <div className="summary-item">
-                            <span>Income: </span>
-                            <span>{result.income}</span>
-                        </div>
-                        <div className="summary-item">
-                            <span>Expense: </span>
-                            <span>{result.expense}</span>
-                        </div>
-                        <div className="summary-item">
-                            <span>Result: </span>
-                            <span>{result.income - result.expense}</span>
-                        </div>
-                    </>
+            <div className="category-summary-section">
+                <h3>Category Summaries</h3>
+                {categorySummaries.length > 0 ? (
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Income</th>
+                                <th>Expense</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {categorySummaries.map((summary, index) => (
+                                <tr key={index}>
+                                    <td>{summary.category}</td>
+                                    <td>{summary.income}</td>
+                                    <td>{summary.expense}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                ) : (
+                    <p>No category data available for the selected date range.</p>
                 )}
             </div>
-        </>
+        </div>
     );
 };
 
