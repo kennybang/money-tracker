@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Summary.css'; 
+import './Summary.css';
+import DateFilters from './DateFilters';
 
 const Summary = () => {
     const [result, setResult] = useState({ income: 0, expense: 0 });
@@ -61,16 +62,13 @@ const Summary = () => {
     return (
         <div>
             <h2>Summary</h2>
-            <div className="date-filters">
-                <label>
-                    Start Date:
-                    <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-                </label>
-                <label>
-                    End Date:
-                    <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-                </label>
-            </div>
+
+            <DateFilters
+                startDate={startDate}
+                endDate={endDate}
+                onStartDateChange={setStartDate}
+                onEndDateChange={setEndDate}
+            />
 
             <div className="summary-section">
                 <h3>Overall</h3>

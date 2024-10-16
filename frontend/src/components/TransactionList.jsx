@@ -2,16 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './TransactionList.css';
+import DateFilters from './DateFilters';
 
 const TransactionList = () => {
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
     // Fetch transactions from the backend
     const fetchTransactions = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/transactions');
+            const response = await axios.get('http://localhost:5000/api/transactions',
+                {
+                    params: { startDate, endDate },
+                });
             setTransactions(response.data);
             setLoading(false);
         } catch (err) {
@@ -22,6 +28,16 @@ const TransactionList = () => {
 
     useEffect(() => {
         fetchTransactions();
+    }, [startDate, endDate]);
+
+    // Set default date range
+    useEffect(() => {
+        const today = new Date().toISOString().split('T')[0];
+        const monthAgo = new Date(new Date().setDate(new Date().getDate() - 30))
+            .toISOString()
+            .split('T')[0];
+        setStartDate(monthAgo);
+        setEndDate(today);
     }, []);
 
     if (loading) {
@@ -38,6 +54,12 @@ const TransactionList = () => {
             <Link to="/add-transaction">
                 <button>Add Transaction</button>
             </Link>
+            <DateFilters
+                startDate={startDate}
+                endDate={endDate}
+                onStartDateChange={setStartDate}
+                onEndDateChange={setEndDate}
+            />
             <table>
                 <thead>
                     <tr>
