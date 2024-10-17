@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const transactionController = require('./controllers/transactionController');
+const categoryController = require('./controllers/categoryController');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -27,6 +28,11 @@ app.get('/api/transactions', transactionController.getTransactions);
 app.get('/api/transactions/:id', transactionController.getTransactionById);
 app.put('/api/transactions/:id', transactionController.updateTransaction);
 app.delete('/api/transactions/:id', transactionController.deleteTransaction);
+
+app.get('/api/categories', categoryController.getCategories);
+app.post('/api/categories', categoryController.addCategory);
+app.put('/api/categories/:id', categoryController.updateCategory);
+app.delete('/api/categories/:id', categoryController.deleteCategory);
 
 // Simple route for testing
 app.get('/', (req, res) => {
