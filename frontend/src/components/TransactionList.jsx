@@ -82,7 +82,7 @@ const TransactionList = () => {
                                 <div>
                                     {transaction.categories.map((category, index) => (
                                         <div key={index}>
-                                            {category.name}: {category.amount}
+                                            {category.categoryId.name}: {category.amount}
                                         </div>
                                     ))}
                                 </div>

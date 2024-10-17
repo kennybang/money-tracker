@@ -1,58 +1,100 @@
 const Transaction = require('../models/transaction');
+const Category = require('../models/category');
 
 // Create a Transaction
 exports.createTransaction = async (req, res) => {
     try {
-        const transaction = new Transaction(req.body);
-        await transaction.save();
-        res.status(201).json(transaction);
+        const { amount, description, date, type, categories } = req.body;
+
+        // Ensure each category has a valid categoryId and amount
+        const validCategories = categories.every(cat => cat.categoryId && cat.amount);
+
+        if (!validCategories) {
+            return res.status(400).json({ message: 'Invalid categories data' });
+        }
+
+        const newTransaction = new Transaction({
+            amount,
+            description,
+            date,
+            type,
+            categories
+        });
+
+        await newTransaction.save();
+        res.status(201).json(newTransaction);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: 'Server error', error });
     }
 };
 
-// Read all Transactions
+// Read all Transactions (with optional date filtering)
 exports.getTransactions = async (req, res) => {
     try {
-        const { startDate, endDate } = req.query;
+        const { startDate, endDate } = req.query; // Extract startDate and endDate from the query params
 
-        let filter = {};
+        let query = {}; // Default is no filtering
 
-        // If both startDate and endDate are provided, filter by date range
+        // If both startDate and endDate are provided, add the date filter
         if (startDate && endDate) {
-            filter.date = {
-                $gte: new Date(startDate),
-                $lte: new Date(endDate)
+            query.date = {
+                $gte: new Date(startDate), // Greater than or equal to startDate
+                $lte: new Date(endDate)    // Less than or equal to endDate
             };
         }
 
-        // Fetch transactions with the applied filter (date range or no filter)
-        const transactions = await Transaction.find(filter);
-        
-        res.json(transactions);
+        // Find transactions with optional date filtering and populate categories
+        const transactions = await Transaction.find(query).populate('categories.categoryId'); 
+
+        res.status(200).json(transactions);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Error fetching transactions', error });
     }
 };
 
 
-// Read a specific Transaction
+// Fetch a single transaction
 exports.getTransactionById = async (req, res) => {
     try {
-        const transaction = await Transaction.findById(req.params.id);
-        if (!transaction) return res.status(404).json({ message: 'Transaction not found' });
+        const transaction = await Transaction.findById(req.params.id)
+            .populate('categories.categoryId', 'name'); // Populating categoryId with category name
+        if (!transaction) {
+            return res.status(404).json({ message: 'Transaction not found' });
+        }
         res.json(transaction);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 };
 
 // Update a Transaction
 exports.updateTransaction = async (req, res) => {
     try {
-        const transaction = await Transaction.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!transaction) return res.status(404).json({ message: 'Transaction not found' });
-        res.json(transaction);
+        const transactionId = req.params.id;
+        const updatedTransactionData = req.body;
+
+        // Fetch categories and include their details
+        const categories = await Promise.all(
+            updatedTransactionData.categories.map(async (cat) => {
+                const category = await Category.findById(cat.categoryId); // Use categoryId
+                if (!category) {
+                    throw new Error(`Category with ID ${cat.categoryId} not found`);
+                }
+                return { categoryId: category, amount: cat.amount }; // Return the full category object
+            })
+        );
+
+        // Update the transaction with the full categories
+        const updatedTransaction = await Transaction.findByIdAndUpdate(
+            transactionId,
+            {
+                ...updatedTransactionData,
+                categories, // Use the full categories array
+            },
+            { new: true } // Return the updated transaction
+        );
+
+        res.json(updatedTransaction);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -91,17 +133,28 @@ exports.getCategorySummaries = async (req, res) => {
                 $unwind: "$categories"  // Unwind categories array
             },
             {
+                $lookup: {
+                    from: "categories", // Use the categories collection
+                    localField: "categories.categoryId",
+                    foreignField: "_id",
+                    as: "categoryDetails"
+                }
+            },
+            {
+                $unwind: "$categoryDetails"  // Unwind the resulting categoryDetails array
+            },
+            {
                 $group: {
                     _id: {
-                        category: "$categories.name",
-                        type: "$type"  // Group by category and transaction type (income/expense)
+                        category: "$categoryDetails.name", // Group by the category name
+                        type: "$type"  // Group by income/expense
                     },
                     total: { $sum: "$categories.amount" }  // Sum the category amounts
                 }
             },
             {
                 $group: {
-                    _id: "$_id.category",  // Group by category
+                    _id: "$_id.category",  // Group by category name
                     income: {
                         $sum: {
                             $cond: [{ $eq: ["$_id.type", "income"] }, "$total", 0]
@@ -116,10 +169,10 @@ exports.getCategorySummaries = async (req, res) => {
             },
             {
                 $project: {
-                    category: "$_id",
+                    category: "$_id",  // Project the category name
                     income: 1,
                     expense: 1,
-                    _id: 0
+                    _id: 0  // Exclude the _id field
                 }
             }
         ]);
@@ -129,6 +182,7 @@ exports.getCategorySummaries = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 
 // Get sum of incomes and expenses within a date range
