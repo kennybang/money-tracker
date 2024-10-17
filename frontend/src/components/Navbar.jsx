@@ -14,9 +14,11 @@ const Navbar = () => {
         <li>
           <NavLink to="/transaction-list" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-class')}>Transaction List</NavLink>
         </li>
+        <li>
+          <NavLink to="/category-manager" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-class')}>Categories</NavLink>
+        </li>
       </ul>
     </nav>
-
   );
 };
 
