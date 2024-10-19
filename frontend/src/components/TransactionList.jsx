@@ -10,6 +10,8 @@ const TransactionList = () => {
     const [error, setError] = useState(null);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
+
 
     // Fetch transactions from the backend
     const fetchTransactions = async () => {
@@ -48,6 +50,22 @@ const TransactionList = () => {
         return <div>{error}</div>;
     }
 
+    const filteredTransactions = transactions.filter(transaction => {
+        // Search description
+        const matchesDescription = transaction.description.toLowerCase().includes(searchQuery.toLowerCase());
+
+        // Search amount 
+        const matchesAmount = transaction.amount.toString().includes(searchQuery);
+
+        // Search category 
+        const matchesCategory = transaction.categories.some(category =>
+            category.categoryId.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+        return matchesDescription || matchesAmount || matchesCategory;
+    });
+
+
     return (
         <div>
             <h2>Transaction List</h2>
@@ -60,6 +78,13 @@ const TransactionList = () => {
                 onStartDateChange={setStartDate}
                 onEndDateChange={setEndDate}
             />
+            <input
+                type="text"
+                placeholder="Search transactions..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+            />
+
             <table>
                 <thead>
                     <tr>
@@ -72,7 +97,7 @@ const TransactionList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {transactions.map((transaction) => (
+                    {filteredTransactions.map((transaction) => (
                         <tr key={transaction._id}>
                             <td>{transaction.amount}</td>
                             <td>{transaction.description}</td>
@@ -95,6 +120,7 @@ const TransactionList = () => {
                         </tr>
                     ))}
                 </tbody>
+
             </table>
         </div>
     );
