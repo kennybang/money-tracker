@@ -123,8 +123,13 @@ const CategoryManager = () => {
                             <>
                                 {/* Display the category details */}
                                 <span className="inline-text"><strong>{category.name}</strong>: {category.description}</span>
-                                <button onClick={() => handleEditCategory(category)}>Edit</button>
-                                <button onClick={() => handleDeleteCategory(category._id)}>Delete</button>
+                                {category.name !== 'Uncategorized' && (
+                                    <>
+                                        {/* Conditionally render Edit and Delete buttons only if the category is not "Uncategorized" */}
+                                        <button onClick={() => handleEditCategory(category)}>Edit</button>
+                                        <button onClick={() => handleDeleteCategory(category._id)}>Delete</button>
+                                    </>
+                                )}
                             </>
                         )}
                     </li>

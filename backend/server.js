@@ -6,6 +6,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const Category = require('./models/category'); // Import Category model
 
 const app = express();
 const PORT = process.env.PORT || 5000; //fallback option
@@ -17,7 +18,17 @@ app.use(bodyParser.json());
 
 // MongoDB connection
 mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
+  .then(async () => {
+    console.log('MongoDB connected');
+    
+    // Initialize the 'uncategorized' category after connecting to MongoDB
+    await initializeUncategorizedCategory();
+
+    // Start the server after category initialization
+    app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  })
   .catch(err => console.error(err));
 
 // Transaction Routes
@@ -39,7 +50,16 @@ app.get('/', (req, res) => {
   res.send('Welcome to the Expense Tracker API');
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// Function to initialize the uncategorized category
+const initializeUncategorizedCategory = async () => {
+  const uncategorizedExists = await Category.findOne({ name: 'uncategorized' });
+  if (!uncategorizedExists) {
+    const uncategorizedCategory = new Category({
+      name: 'Uncategorized',
+    });
+    await uncategorizedCategory.save();
+    console.log('Uncategorized category created');
+  } else {
+    console.log('Uncategorized category already exists');
+  }
+};
