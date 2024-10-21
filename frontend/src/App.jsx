@@ -5,6 +5,7 @@ import EditTransaction from './components/EditTransaction';
 import MainLayout from './layout/MainLayout';
 import Summary from './components/Summary';
 import CategoryManager from './components/CategoryManager';
+import ImportCSV from './components/ImportCSV';
 import './App.css';
 
 function App() {
@@ -16,6 +17,8 @@ function App() {
                 <Route path="/edit-transaction/:id" element={<MainLayout><EditTransaction /></MainLayout>} />
                 <Route path="/transaction-list" element={<MainLayout><TransactionList /></MainLayout>} />
                 <Route path="/category-manager" element={<MainLayout><CategoryManager /></MainLayout>} />
+                <Route path="/import-csv" element={<MainLayout><ImportCSV /></MainLayout>} />
+
             </Routes>
             
         </Router>

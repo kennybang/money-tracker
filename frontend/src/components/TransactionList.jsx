@@ -72,6 +72,9 @@ const TransactionList = () => {
             <Link to="/add-transaction">
                 <button>Add Transaction</button>
             </Link>
+            <Link to="/import-csv">
+                <button>Import CSV</button>
+            </Link>
             <DateFilters
                 startDate={startDate}
                 endDate={endDate}
