@@ -21,6 +21,7 @@
   }
   
   .vertical-navbar a {
+    color: inherit;
     text-decoration: none; 
     display: block; 
   }
