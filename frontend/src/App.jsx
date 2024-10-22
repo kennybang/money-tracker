@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import TransactionList from './components/TransactionList';
-import AddTransaction from './components/AddTransactionPage';
-import EditTransaction from './components/EditTransaction';
+import TransactionList from './pages/TransactionList';
+import AddTransaction from './pages/AddTransactionPage';
+import EditTransaction from './pages/EditTransaction';
 import MainLayout from './layout/MainLayout';
-import Summary from './components/Summary';
-import CategoryManager from './components/CategoryManager';
-import ImportCSV from './components/ImportCSV';
+import Summary from './pages/Summary';
+import CategoryManager from './pages/CategoryManager';
+import ImportCSV from './pages/ImportCSV';
 import './App.css';
 
 function App() {
