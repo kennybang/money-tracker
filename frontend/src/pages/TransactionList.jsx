@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './TransactionList.css';
-import DateFilters from './DateFilters';
+import DateFilters from '../components/DateFilters';
 
 const TransactionList = () => {
     const [transactions, setTransactions] = useState([]);

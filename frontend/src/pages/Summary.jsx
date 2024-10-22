@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Summary.css';
-import DateFilters from './DateFilters';
+import DateFilters from '../components/DateFilters';
 
 const Summary = () => {
     const [result, setResult] = useState({ income: 0, expense: 0 });
