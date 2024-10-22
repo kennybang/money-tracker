@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './TransactionList.css';
 import DateFilters from '../components/DateFilters';
+import Button from '../components/Button';
 
 const TransactionList = () => {
     const [transactions, setTransactions] = useState([]);
@@ -69,12 +70,8 @@ const TransactionList = () => {
     return (
         <div>
             <h2>Transaction List</h2>
-            <Link to="/add-transaction">
-                <button>Add Transaction</button>
-            </Link>
-            <Link to="/import-csv">
-                <button>Import CSV</button>
-            </Link>
+            <Button text="Add Transaction" to="/add-transaction" />
+            <Button text="Import CSV" to="/import-csv" />
             <DateFilters
                 startDate={startDate}
                 endDate={endDate}
@@ -116,9 +113,7 @@ const TransactionList = () => {
                                 </div>
                             </td>
                             <td>
-                                <Link to={`/edit-transaction/${transaction._id}`}>
-                                    <button>Edit</button>
-                                </Link>
+                            <Button text="Edit" to={`/edit-transaction/${transaction._id}`} />
                             </td>
                         </tr>
                     ))}

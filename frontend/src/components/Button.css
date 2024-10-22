@@ -1,0 +1,16 @@
+/* Button Styles */
+.custom-button {
+    padding: 8px 16px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px; /* Adjust this value to increase or decrease the roundness */
+    background-color: var(--color-primary);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+  }
+  
+  /* Hover effect */
+  .custom-button:hover {
+    background-color: var(--color-primary-hover); /* Darken the background on hover */
+  }
