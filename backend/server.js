@@ -52,7 +52,7 @@ app.get('/', (req, res) => {
 
 // Function to initialize the uncategorized category
 const initializeUncategorizedCategory = async () => {
-  const uncategorizedExists = await Category.findOne({ name: 'uncategorized' });
+  const uncategorizedExists = await Category.findOne({ name: 'Uncategorized' });
   if (!uncategorizedExists) {
     const uncategorizedCategory = new Category({
       name: 'Uncategorized',
