@@ -6,8 +6,9 @@ table {
 
 th, td {
     /*border: 1px solid #ddd;*/
-    padding: 8px;
     text-align: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 th {
@@ -20,4 +21,15 @@ tr:nth-child(even) {
 
 tr:hover {
     background-color: #ddd;
+}
+
+.list-actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.filters {
+    display: flex;
+    font-size: 2px;
 }

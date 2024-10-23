@@ -9,7 +9,7 @@
   -moz-osx-font-smoothing: grayscale;
 
   --font-size-small: 0.875rem;  /* 14px */
-  --font-size-base: 1rem;       /* 16px */
+  --font-size-base: 16px;       /* 16px */
   --font-size-medium: 1.125rem; /* 18px */
   --font-size-large: 1.5rem;    /* 24px */
   --font-size-xlarge: 2rem;     /* 32px */
@@ -39,3 +39,6 @@ body {
   font-size: var(--font-size-base);
 }
 
+input{
+  font-size: var(--font-size-base);
+}

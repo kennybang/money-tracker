@@ -70,21 +70,26 @@ const TransactionList = () => {
     return (
         <div>
             <h2>Transaction List</h2>
-            <Button text="Add Transaction" to="/add-transaction" />
-            <Button text="Import CSV" to="/import-csv" />
-            <DateFilters
-                startDate={startDate}
-                endDate={endDate}
-                onStartDateChange={setStartDate}
-                onEndDateChange={setEndDate}
-            />
-            <input
-                type="text"
-                placeholder="Search transactions..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-            />
-
+            <div className='list-actions'>
+                <div className='filters'>
+                    <input
+                        type="text"
+                        placeholder="Search transactions..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <DateFilters
+                        startDate={startDate}
+                        endDate={endDate}
+                        onStartDateChange={setStartDate}
+                        onEndDateChange={setEndDate}
+                    />
+                </div>
+                <div>
+                    <Button text="Import CSV" to="/import-csv" />
+                    <Button text="Add Transaction" to="/add-transaction" />
+                </div>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -113,7 +118,7 @@ const TransactionList = () => {
                                 </div>
                             </td>
                             <td>
-                            <Button text="Edit" to={`/edit-transaction/${transaction._id}`} />
+                                <Button text="Edit" to={`/edit-transaction/${transaction._id}`} />
                             </td>
                         </tr>
                     ))}

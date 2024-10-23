@@ -1,21 +1,31 @@
 .transaction-info{
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 .info-row{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     margin: 5px;
+    width: 80%;
+}
+
+.row-text {
+    width: 10%;
+    margin-right: 5%;
 }
 
 .info-row input,
 .info-row select{
-    width: 15vw;
+    width: 20%;
     box-sizing: border-box;
     padding: 0rem;
-    margin-left: auto;
+    font-size: var(--font-size-base);
+}
+
+.info-row .description {
+    width: 50%;
 }
 
 .categories-container {
@@ -41,6 +51,10 @@
     flex: 1;
 }
 
+.category-row select {
+    font-size: var(--font-size-base);
+}
+
 .category-row span  {
     margin-right: 0.5rem;
     flex: 1;
@@ -49,4 +63,9 @@
 
 .category-row button {
     margin-left: 0.5rem;
+}
+
+.primary-buttons {
+    display: flex;
+    justify-content: right;
 }

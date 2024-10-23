@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './TransactionPage.css';
+import Button from '../components/Button';
 
 const AddTransactionPage = () => {
     const navigate = useNavigate();
@@ -76,8 +77,17 @@ const AddTransactionPage = () => {
             <h2>Add Transaction</h2>
             <form onSubmit={handleSubmit}>
                 <div className='transaction-info'>
+                <label className='info-row'>
+                        <span className='row-text'>Description:</span>
+                        <input 
+                            type="text" 
+                            value={description} 
+                            onChange={(e) => setDescription(e.target.value)}
+                            className='description'
+                        />
+                    </label>
                     <label className='info-row'>
-                        Amount:
+                    <span className='row-text'>Amount:</span>
                         <input 
                             type="number" 
                             value={amount} 
@@ -85,16 +95,9 @@ const AddTransactionPage = () => {
                             required 
                         />
                     </label>
+                    
                     <label className='info-row'>
-                        Description:
-                        <input 
-                            type="text" 
-                            value={description} 
-                            onChange={(e) => setDescription(e.target.value)} 
-                        />
-                    </label>
-                    <label className='info-row'>
-                        Date:
+                    <span className='row-text'>Date:</span>
                         <input 
                             type="date" 
                             value={date} 
@@ -103,7 +106,7 @@ const AddTransactionPage = () => {
                         />
                     </label>
                     <label className='info-row'>
-                        Type:
+                    <span className='row-text'>Type:</span>
                         <select 
                             value={type} 
                             onChange={(e) => setType(e.target.value)}
@@ -147,13 +150,13 @@ const AddTransactionPage = () => {
                             )}
                         </div>
                     ))}
-                </div>     
-                <button type="button" onClick={handleAddCategory}>
-                    Add Category
-                </button>
-                <button type="submit">Submit</button>
+                </div>
+                <Button text='Add Category' onClick={handleAddCategory}/>
+                <div className='primary-buttons'>  
+                <button className='custom-button'type="submit">Submit</button>
+                <Button text='Cancel' to={'/transaction-list'}/> 
+                </div>
             </form>
-            <button onClick={() => navigate('/transaction-list')}>Back to Transaction List</button>
         </div>
     );
 };

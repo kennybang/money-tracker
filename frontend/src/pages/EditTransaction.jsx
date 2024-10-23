@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import './TransactionPage.css';
+import Button from '../components/Button';
 
 const EditTransaction = () => {
     const [transaction, setTransaction] = useState({
@@ -113,17 +114,18 @@ const EditTransaction = () => {
             <form onSubmit={handleSubmit}>
                 <div className='transaction-info'>
                     <label className='info-row'>
-                        <label>Amount:</label>
+                        <label className='row-text'>Amount:</label>
                         <input
                             type="number"
                             name="amount"
                             value={transaction.amount}
                             onChange={handleChange}
                             required
+                            className='description'
                         />
                     </label>
                     <label className='info-row'>
-                        <label>Description:</label>
+                        <label className='row-text'>Description:</label>
                         <input
                             type="text"
                             name="description"
@@ -132,7 +134,7 @@ const EditTransaction = () => {
                         />
                     </label>
                     <label className='info-row'>
-                        <label>Date:</label>
+                        <label className='row-text'>Date:</label>
                         <input
                             type="date"
                             name="date"
@@ -142,7 +144,7 @@ const EditTransaction = () => {
                         />
                     </label>
                     <label className='info-row'>
-                        <label>Type:</label>
+                        <label className='row-text'>Type:</label>
                         <select name="type" value={transaction.type} onChange={handleChange}>
                             <option value="income">Income</option>
                             <option value="expense">Expense</option>
@@ -187,11 +189,13 @@ const EditTransaction = () => {
                         </div>
                     ))}
                 </div>
-                <button type="button" onClick={addCategory}>Add Category</button>
-                <button type="submit">Update Transaction</button>
+                <button className='custom-button' type="button" onClick={addCategory}>Add Category</button>
+                <div className='primary-buttons'>
+                <Button text='Cancel' to={'/transaction-list'}/>
+                <button className='custom-button' onClick={handleDelete} style={{ marginLeft: '10px', color: '#cb253b' }}>Delete Transaction</button> {/* Delete button */}
+                <button className='custom-button' type="submit">Update Transaction</button>
+                </div>
             </form>
-            <button onClick={() => navigate('/transaction-list')}>Cancel</button> {/* Back/Cancel button */}
-            <button onClick={handleDelete} style={{ marginLeft: '10px', color: 'red' }}>Delete Transaction</button> {/* Delete button */}
         </div>
     );
 };
