@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './CategoryManager.css';
+import Button from '../components/Button';
 
 const CategoryManager = () => {
     const [categories, setCategories] = useState([]);
@@ -41,11 +42,13 @@ const CategoryManager = () => {
 
     // delete category
     const handleDeleteCategory = async (categoryId) => {
-        try {
-            await axios.delete(`http://localhost:5000/api/categories/${categoryId}`);
-            fetchCategories();
-        } catch (error) {
-            console.error('Error deleting category:', error);
+        if (window.confirm('Are you sure you want to delete this transaction?')) {
+            try {
+                await axios.delete(`http://localhost:5000/api/categories/${categoryId}`);
+                fetchCategories();
+            } catch (error) {
+                console.error('Error deleting category:', error);
+            }
         }
     };
 
@@ -93,12 +96,12 @@ const CategoryManager = () => {
                     onChange={handleNewCategoryChange}
                     className="inline-input"
                 />
-                <button onClick={handleAddCategory}>Add Category</button>
+                <Button text='Add Category' onClick={handleAddCategory} />
             </div>
             <h4>Categories</h4>
-            <ul>
+            <ul className='category-list'>
                 {categories.map((category) => (
-                    <li key={category._id}>
+                    <li key={category._id} className="category-item">
                         {editingCategoryId === category._id ? (
                             <>
                                 {/* Input fields to edit the category */}
@@ -116,18 +119,19 @@ const CategoryManager = () => {
                                     onChange={handleInputChange}
                                     className="inline-input"
                                 />
-                                <button onClick={() => handleSaveCategory(category._id)}>Save</button>
-                                <button onClick={() => setEditingCategoryId(null)}>Cancel</button>
+                                <Button text='Save' onClick={() => handleSaveCategory(category._id)} />
+                                <Button text='Cancel' onClick={() => setEditingCategoryId(null)} />
                             </>
                         ) : (
                             <>
                                 {/* Display the category details */}
-                                <span className="inline-text"><strong>{category.name}</strong>: {category.description}</span>
+                                <span className="inline-text"><strong>{category.name}:</strong></span>
+                                <span className="inline-text">{category.description}</span>
                                 {category.name !== 'Uncategorized' && (
                                     <>
                                         {/* Conditionally render Edit and Delete buttons only if the category is not "Uncategorized" */}
-                                        <button onClick={() => handleEditCategory(category)}>Edit</button>
-                                        <button onClick={() => handleDeleteCategory(category._id)}>Delete</button>
+                                        <Button text='Edit' onClick={() => handleEditCategory(category)} />
+                                        <Button text='Delete' onClick={() => handleDeleteCategory(category._id)} />
                                     </>
                                 )}
                             </>

@@ -1,12 +1,19 @@
+.category-list {
+    list-style-type: none;
+    padding: 0;
+    width: 50%;
+}
+
+.category-item {
+    display: grid;
+    grid-template-columns: 4fr 10fr 1fr 1fr; /* Adjust columns*/
+    align-items: center;
+    gap: 10px; /* columns gap */
+    margin-bottom: 10px; /* row margin */
+}
+
 .inline-input {
-    font-size: 16px;
-    
-}
-
-.inline-text {
-    font-size: 16px;
-}
-
-button {
-    font-size: 16px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
