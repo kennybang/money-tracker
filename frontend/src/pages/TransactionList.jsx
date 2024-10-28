@@ -12,15 +12,16 @@ const TransactionList = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
+    const [sortBy, setSortBy] = useState('date');
+    const [order, setOrder] = useState('desc');
 
 
     // Fetch transactions from the backend
     const fetchTransactions = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/transactions',
-                {
-                    params: { startDate, endDate },
-                });
+            const response = await axios.get('http://localhost:5000/api/transactions', {
+                params: { startDate, endDate, sortBy, order },
+            });
             setTransactions(response.data);
             setLoading(false);
         } catch (err) {
@@ -31,7 +32,14 @@ const TransactionList = () => {
 
     useEffect(() => {
         fetchTransactions();
-    }, [startDate, endDate]);
+    }, [startDate, endDate, sortBy, order]);
+
+    const handleSortChange = (event) => {
+        const [sort, order] = event.target.value.split('-');
+        setSortBy(sort);
+        setOrder(order);
+        fetchTransactions();
+    };
 
     // Set default date range
     useEffect(() => {
@@ -84,6 +92,12 @@ const TransactionList = () => {
                         onStartDateChange={setStartDate}
                         onEndDateChange={setEndDate}
                     />
+                    <select name="sort" id="sort" onChange={handleSortChange}>
+                        <option value="date-desc">Date (Desc)</option>
+                        <option value="date-asc">Date (Asc)</option>
+                        <option value="amount-desc">Amount (Desc)</option>
+                        <option value="amount-asc">Amount (Asc)</option>
+                    </select>
                 </div>
                 <div>
                     <Button text="Import CSV" to="/import-csv" />

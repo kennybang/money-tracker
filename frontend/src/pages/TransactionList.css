@@ -31,5 +31,10 @@ tr:hover {
 
 .filters {
     display: flex;
-    font-size: 2px;
+    height: calc(var(--font-size-base) + 11px);
+    font-size: var(--font-size-base);
+}
+
+.filters select{
+    font-size: inherit;
 }
