@@ -28,29 +28,35 @@ exports.createTransaction = async (req, res) => {
     }
 };
 
-// Read all Transactions (with optional date filtering)
+// Read all Transactions (with optional date filtering and sorting)
 exports.getTransactions = async (req, res) => {
     try {
-        const { startDate, endDate } = req.query; // Extract startDate and endDate from the query params
+        const { startDate, endDate, sortBy = 'date', order = 'desc' } = req.query;
 
         let query = {}; // Default is no filtering
 
-        // If both startDate and endDate are provided, add the date filter
+        // Apply date filtering if both startDate and endDate are provided
         if (startDate && endDate) {
             query.date = {
-                $gte: new Date(startDate), // Greater than or equal to startDate
-                $lte: new Date(endDate)    // Less than or equal to endDate
+                $gte: new Date(startDate),
+                $lte: new Date(endDate)
             };
         }
 
-        // Find transactions with optional date filtering and populate categories
-        const transactions = await Transaction.find(query).populate('categories.categoryId'); 
+        // Sort direction (1 for ascending, -1 for descending)
+        const sortDirection = order === 'asc' ? 1 : -1;
+        
+        // Use `sortBy` and `sortDirection` to sort the transactions
+        const transactions = await Transaction.find(query)
+            .populate('categories.categoryId')
+            .sort({ [sortBy]: sortDirection }); // Dynamic sort field and direction
 
         res.status(200).json(transactions);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching transactions', error });
     }
 };
+
 
 
 // Fetch a single transaction
