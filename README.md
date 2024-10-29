@@ -21,7 +21,7 @@ Install dependencies in both frontend and backend.
 Make sure you are in the /backend/ directory of the project when you run this command. This will start both the server and client using nodemon and concurrently.
 
 
-### ToDos
-- Sorting
+### ToDos (MightDos)
+- Account/Login/Profile
 - UI upgrades
 - Feel free to suggest other features or recommendations!

@@ -10,6 +10,8 @@ const Summary = () => {
     const [error, setError] = useState(null);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [sortBy, setSortBy] = useState('expense'); // default sorting key
+    const [order, setOrder] = useState('desc'); // default sorting order
 
     // Fetch overall income/expense summary and category summaries
     const fetchResult = async () => {
@@ -25,7 +27,7 @@ const Summary = () => {
             const categoryResponse = await axios.get('http://localhost:5000/api/transactions/summaries', {
                 params: { startDate, endDate },
             });
-            setCategorySummaries(categoryResponse.data);
+            setCategorySummaries(sortedData(categoryResponse.data, sortBy, order)); // Set & sort
             setLoading(false);
         } catch (err) {
             setError('Failed to fetch result');
@@ -49,6 +51,28 @@ const Summary = () => {
         setStartDate(monthAgo);
         setEndDate(today);
     }, []);
+
+    const handleSortChange = (event) => {
+        const [sort, sortOrder] = event.target.value.split('-');
+        setSortBy(sort);
+        setOrder(sortOrder);
+
+        // Update category summaries on new sorting rule
+        setCategorySummaries(sortedData(categorySummaries, sortBy, sortOrder));
+    };
+
+    const sortedData = (data, sortBy, order) => {
+        return [...data].sort((a, b) => {
+            const aValue = a[sortBy];
+            const bValue = b[sortBy];
+
+            if (order === 'asc') {
+                return aValue - bValue;
+            } else {
+                return bValue - aValue;
+            }
+        });
+    };
 
     // loading and error states
     if (loading) {
@@ -79,6 +103,19 @@ const Summary = () => {
 
             <div className="category-summary-section">
                 <h3>Category Summaries</h3>
+                <select
+                    name="sort"
+                    id="sort"
+                    onChange={handleSortChange}
+                    style={{
+                        fontSize: 'var(--font-size-base)',
+                    }}
+                >
+                    <option value="expense-desc">Expense (Desc)</option>
+                    <option value="expense-asc">Expense (Asc)</option>
+                    <option value="income-desc">Income (Desc)</option>
+                    <option value="income-asc">Income (Asc)</option>
+                </select>
                 {categorySummaries.length > 0 ? (
                     <table>
                         <thead>
