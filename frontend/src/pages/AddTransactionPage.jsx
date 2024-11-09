@@ -34,6 +34,15 @@ const AddTransactionPage = () => {
         const newCategories = [...categories];
         newCategories[index][field] = value;
         setCategories(newCategories);
+
+        // Update the totalt Amount by summing up category Amounts
+        let sum = 0;
+        newCategories.forEach(category => {
+            sum += parseFloat(category.amount);
+        });
+
+        setAmount(sum);
+
     };
 
     const handleCategoryIdChange = (index, value) => {
@@ -77,45 +86,40 @@ const AddTransactionPage = () => {
             <h2>Add Transaction</h2>
             <form onSubmit={handleSubmit}>
                 <div className='transaction-info'>
-                <label className='info-row'>
+                    <label className='info-row'>
                         <span className='row-text'>Description:</span>
-                        <input 
-                            type="text" 
-                            value={description} 
+                        <input
+                            type="text"
+                            value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             className='description'
                         />
                     </label>
                     <label className='info-row'>
                     <span className='row-text'>Amount:</span>
-                        <input 
-                            type="number" 
-                            value={amount} 
-                            onChange={(e) => setAmount(e.target.value)} 
-                            required 
-                        />
+                    <span>{amount}</span>
                     </label>
-                    
+
                     <label className='info-row'>
-                    <span className='row-text'>Date:</span>
-                        <input 
-                            type="date" 
-                            value={date} 
-                            onChange={(e) => setDate(e.target.value)} 
-                            required 
+                        <span className='row-text'>Date:</span>
+                        <input
+                            type="date"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            required
                         />
                     </label>
                     <label className='info-row'>
-                    <span className='row-text'>Type:</span>
-                        <select 
-                            value={type} 
+                        <span className='row-text'>Type:</span>
+                        <select
+                            value={type}
                             onChange={(e) => setType(e.target.value)}
                         >
                             <option value="income">Income</option>
                             <option value="expense">Expense</option>
                         </select>
                     </label>
-                </div>               
+                </div>
                 <h3>Categories</h3>
                 <div className="categories-container">
                     <div className="category-row header">
@@ -151,10 +155,10 @@ const AddTransactionPage = () => {
                         </div>
                     ))}
                 </div>
-                <Button text='Add Category' onClick={handleAddCategory}/>
-                <div className='primary-buttons'>  
-                <button className='custom-button'type="submit">Submit</button>
-                <Button text='Cancel' to={'/transaction-list'}/> 
+                <Button text='Add Category' onClick={handleAddCategory} />
+                <div className='primary-buttons'>
+                    <button className='custom-button' type="submit">Submit</button>
+                    <Button text='Cancel' to={'/transaction-list'} />
                 </div>
             </form>
         </div>
