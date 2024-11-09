@@ -38,7 +38,7 @@ const AddTransactionPage = () => {
         // Update the totalt Amount by summing up category Amounts
         let sum = 0;
         newCategories.forEach(category => {
-            sum += parseFloat(category.amount);
+            sum += parseFloat(category.amount) || 0;
         });
 
         setAmount(sum);

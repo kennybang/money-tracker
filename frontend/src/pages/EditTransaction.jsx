@@ -44,8 +44,20 @@ const EditTransaction = () => {
     // Handle category changes
     const handleCategoryChange = (index, field, value) => {
         const newCategories = [...transaction.categories];
-        newCategories[index] = { ...newCategories[index], [field]: value };
-        setTransaction((prev) => ({ ...prev, categories: newCategories }));
+        newCategories[index] = { ...newCategories[index], [field]: value }; //Updates category
+
+    //Calculate the total amount by summing up categories 'amount' field
+    let sum = 0;
+    newCategories.forEach(category => {
+        sum += parseFloat(category.amount) || 0; // ensure number
+    });
+
+    //Update the transaction state with the new categories and the updated total amount
+    setTransaction((prev) => ({
+        ...prev,
+        categories: newCategories,
+        amount: sum,
+    }));
     };
 
     // Add a new category row
@@ -115,6 +127,8 @@ const EditTransaction = () => {
                 <div className='transaction-info'>
                     <label className='info-row'>
                         <label className='row-text'>Amount:</label>
+                        <span>{transaction.amount}</span>
+                        {/* 
                         <input
                             type="number"
                             name="amount"
@@ -123,6 +137,7 @@ const EditTransaction = () => {
                             required
                             className='description'
                         />
+                        */}
                     </label>
                     <label className='info-row'>
                         <label className='row-text'>Description:</label>
